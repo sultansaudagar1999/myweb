@@ -1,0 +1,525 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   Design tokens
+   The palette is drawn from the logo: deep night navy (#010617 — the logo's
+   own background), electric brand blue and crisp white. "Paper" surfaces are
+   used for long-form reading.
+   ========================================================================== */
+@theme {
+  --color-night: #010617;
+  --color-night-2: #050c20;
+  --color-night-3: #0a142e;
+  --color-night-4: #121e3d;
+  --color-line: rgb(148 170 214 / 0.14);
+  --color-line-strong: rgb(148 170 214 / 0.26);
+
+  --color-fg: #eef2fa;
+  --color-fg-muted: #a3aec4;
+
+  --color-brand: #2aa7ff;
+  --color-brand-bright: #63c1ff;
+  --color-brand-deep: #0b63f6;
+
+  --color-paper: #f4f6fb;
+  --color-paper-2: #e9edf6;
+  --color-paper-line: #d6dceb;
+  --color-ink: #070d1f;
+  --color-ink-muted: #46516a;
+
+  --color-success: #3ddc97;
+  --color-danger: #ff6b6b;
+  --color-danger-ink: #c62828;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-sora), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, "SFMono-Regular", monospace;
+
+  --breakpoint-xs: 26rem;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+@layer base {
+  html {
+    /* clip (not hidden) keeps position: sticky working */
+    overflow-x: clip;
+    background: var(--color-night);
+    color-scheme: dark;
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 6rem;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+  body {
+    background: var(--color-night);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.65;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: clip;
+  }
+  ::selection {
+    background: var(--color-brand);
+    color: var(--color-night);
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+    font-weight: 600;
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-brand-bright);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  .paper :focus-visible {
+    outline-color: var(--color-brand-deep);
+  }
+}
+
+/* ==========================================================================
+   Layout & typography utilities
+   ========================================================================== */
+@utility container-page {
+  width: 100%;
+  max-width: 78rem;
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 4vw, 2.5rem);
+}
+
+@utility section-y {
+  padding-block: clamp(4.5rem, 10vw, 8.5rem);
+}
+
+@utility text-display {
+  font-family: var(--font-display);
+  font-size: clamp(2.6rem, 6.4vw, 5.6rem);
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+  font-weight: 600;
+}
+
+@utility text-h2 {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4.2vw, 3.4rem);
+  line-height: 1.06;
+  letter-spacing: -0.035em;
+  font-weight: 600;
+}
+
+@utility text-h3 {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+}
+
+@utility text-lead {
+  font-size: clamp(1.075rem, 1.6vw, 1.25rem);
+  line-height: 1.6;
+}
+
+/* Monospaced section label, e.g. "01 — Selected work" */
+@utility eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+/* ==========================================================================
+   Components
+   ========================================================================== */
+@layer components {
+  .btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    min-height: 3rem;
+    padding: 0.8rem 1.4rem;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.975rem;
+    line-height: 1.2;
+    letter-spacing: -0.005em;
+    white-space: nowrap;
+    transition:
+      background-color 0.25s ease,
+      color 0.25s ease,
+      border-color 0.25s ease,
+      transform 0.25s var(--ease-out-expo),
+      box-shadow 0.25s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn:active {
+    transform: scale(0.98);
+  }
+  .btn svg {
+    flex-shrink: 0;
+    transition: transform 0.3s var(--ease-out-expo);
+  }
+  .btn:hover svg.arrow {
+    transform: translateX(3px);
+  }
+  .btn:hover svg.arrow-up {
+    transform: translate(2px, -2px);
+  }
+
+  .btn-primary {
+    background: var(--color-brand);
+    color: var(--color-night);
+    box-shadow:
+      0 0 0 1px rgb(99 193 255 / 0.4) inset,
+      0 8px 30px -10px rgb(42 167 255 / 0.65);
+  }
+  .btn-primary:hover {
+    background: var(--color-brand-bright);
+  }
+
+  .btn-secondary {
+    color: var(--color-fg);
+    border: 1px solid var(--color-line-strong);
+    background: rgb(255 255 255 / 0.02);
+  }
+  .btn-secondary:hover {
+    border-color: rgb(99 193 255 / 0.6);
+    background: rgb(42 167 255 / 0.08);
+  }
+
+  .paper .btn-secondary {
+    color: var(--color-ink);
+    border-color: var(--color-paper-line);
+    background: #fff;
+  }
+  .paper .btn-secondary:hover {
+    border-color: var(--color-brand-deep);
+    background: #fff;
+  }
+  .paper .btn-primary {
+    background: var(--color-ink);
+    color: #fff;
+    box-shadow: none;
+  }
+  .paper .btn-primary:hover {
+    background: var(--color-brand-deep);
+  }
+
+  .btn-sm {
+    min-height: 2.5rem;
+    padding: 0.55rem 1.05rem;
+    font-size: 0.9rem;
+  }
+
+  /* Underlined text link with animated rule */
+  .link-underline {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 1px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size 0.35s var(--ease-out-expo);
+    padding-bottom: 2px;
+  }
+  .link-underline:hover {
+    background-size: 100% 1px;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.3rem 0.7rem;
+    border: 1px solid var(--color-line);
+    border-radius: 999px;
+    font-size: 0.8rem;
+    line-height: 1.3;
+    color: var(--color-fg-muted);
+    background: rgb(255 255 255 / 0.02);
+  }
+  .paper .chip {
+    border-color: var(--color-paper-line);
+    color: var(--color-ink-muted);
+    background: #fff;
+  }
+
+  /* Light reading surface */
+  .paper {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    color-scheme: light;
+  }
+
+  /* Faint engineering grid used behind hero areas */
+  .grid-lines {
+    background-image:
+      linear-gradient(to right, rgb(148 170 214 / 0.07) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(148 170 214 / 0.07) 1px, transparent 1px);
+    background-size: 72px 72px;
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, #000 30%, transparent 75%);
+  }
+
+  .glow-brand {
+    background: radial-gradient(closest-side, rgb(11 99 246 / 0.35), transparent);
+  }
+
+  /* Browser chrome around project screenshots */
+  .browser-frame {
+    position: relative;
+    border-radius: 14px;
+    border: 1px solid var(--color-line-strong);
+    background: var(--color-night-3);
+    overflow: hidden;
+    box-shadow:
+      0 30px 80px -30px rgb(0 0 0 / 0.8),
+      0 0 0 1px rgb(255 255 255 / 0.02) inset;
+  }
+  .browser-frame__bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    height: 32px;
+    padding-inline: 12px;
+    border-bottom: 1px solid var(--color-line);
+    background: var(--color-night-2);
+  }
+  .browser-frame__bar span {
+    width: 9px;
+    height: 9px;
+    border-radius: 999px;
+    background: var(--color-night-4);
+  }
+
+  /* Scrolling page preview on hover (portfolio) */
+  .scroll-preview {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+  }
+  .scroll-preview img {
+    position: absolute;
+    inset: 0 0 auto 0;
+    width: 100%;
+    height: auto;
+    transform: translateY(0);
+    transition: transform 0.9s var(--ease-out-expo);
+  }
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .group:hover .scroll-preview img,
+    .group:focus-within .scroll-preview img {
+      transform: translateY(calc(-100% + var(--frame-h, 400px)));
+      transition: transform 6s cubic-bezier(0.45, 0, 0.55, 1);
+    }
+  }
+
+  /* Forms */
+  .field-label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 0.45rem;
+    color: var(--color-fg);
+  }
+  .field-label .opt {
+    font-weight: 400;
+    color: var(--color-fg-muted);
+    margin-left: 0.35rem;
+  }
+  .field {
+    display: block;
+    width: 100%;
+    min-height: 3rem;
+    padding: 0.75rem 0.95rem;
+    border-radius: 10px;
+    border: 1px solid var(--color-line-strong);
+    background: var(--color-night-2);
+    color: var(--color-fg);
+    font: inherit;
+    font-size: 1rem; /* ≥16px prevents iOS zoom on focus */
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease,
+      background-color 0.2s ease;
+  }
+  .field::placeholder {
+    color: rgb(163 174 196 / 0.6);
+  }
+  .field:hover {
+    border-color: rgb(148 170 214 / 0.4);
+  }
+  .field:focus {
+    outline: none;
+    border-color: var(--color-brand);
+    box-shadow: 0 0 0 3px rgb(42 167 255 / 0.22);
+    background: var(--color-night-3);
+  }
+  .field[aria-invalid="true"] {
+    border-color: var(--color-danger);
+  }
+  .field[aria-invalid="true"]:focus {
+    box-shadow: 0 0 0 3px rgb(255 107 107 / 0.25);
+  }
+  select.field {
+    appearance: none;
+    padding-right: 2.5rem;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%23a3aec4' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4 6 4 4 4-4'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.9rem center;
+  }
+  select.field option {
+    background: var(--color-night-2);
+    color: var(--color-fg);
+  }
+  textarea.field {
+    min-height: 9rem;
+    resize: vertical;
+  }
+  .field-error {
+    margin-top: 0.4rem;
+    font-size: 0.85rem;
+    color: var(--color-danger);
+  }
+  .field-hint {
+    margin-top: 0.4rem;
+    font-size: 0.85rem;
+    color: var(--color-fg-muted);
+  }
+
+  /* FAQ accordion */
+  .faq-item summary {
+    list-style: none;
+    cursor: pointer;
+  }
+  .faq-item summary::-webkit-details-marker {
+    display: none;
+  }
+  .faq-item .faq-icon {
+    transition: transform 0.3s var(--ease-out-expo);
+  }
+  .faq-item[open] .faq-icon {
+    transform: rotate(45deg);
+  }
+
+  /* Prose for legal pages */
+  .prose-legal h2 {
+    font-size: 1.35rem;
+    margin-top: 2.5rem;
+    margin-bottom: 0.75rem;
+  }
+  .prose-legal p,
+  .prose-legal li {
+    color: var(--color-ink-muted);
+  }
+  .prose-legal p + p {
+    margin-top: 0.9rem;
+  }
+  .prose-legal ul {
+    list-style: disc;
+    padding-left: 1.25rem;
+    margin-block: 0.75rem;
+  }
+  .prose-legal li + li {
+    margin-top: 0.35rem;
+  }
+  .prose-legal a {
+    color: var(--color-brand-deep);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+
+/* ==========================================================================
+   Motion
+   Reveal-on-scroll only hides content when JS is running (html.js), so the
+   page is fully readable without JavaScript.
+   ========================================================================== */
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-reveal] {
+    opacity: 0;
+    transform: translateY(18px);
+    transition:
+      opacity 0.9s var(--ease-out-expo),
+      transform 0.9s var(--ease-out-expo);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+  .js [data-reveal].is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  .page-enter {
+    animation: page-enter 0.6s var(--ease-out-expo) both;
+  }
+  /* Starts partly visible (not 0) so above-the-fold text paints immediately
+     and counts towards Largest Contentful Paint. */
+  @keyframes page-enter {
+    from {
+      opacity: 0.35;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .orbit-draw {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: orbit-draw 1.8s 0.3s var(--ease-out-expo) forwards;
+  }
+  @keyframes orbit-draw {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  .hero-in > * {
+    animation: page-enter 0.9s var(--ease-out-expo) both;
+  }
+  .hero-in > *:nth-child(2) {
+    animation-delay: 80ms;
+  }
+  .hero-in > *:nth-child(3) {
+    animation-delay: 160ms;
+  }
+  .hero-in > *:nth-child(4) {
+    animation-delay: 240ms;
+  }
+  .hero-in > *:nth-child(5) {
+    animation-delay: 320ms;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
