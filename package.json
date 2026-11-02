@@ -7,7 +7,7 @@
     "dev": "next dev",
     "build": "next build && node scripts/postbuild.mjs",
     "start": "node scripts/serve.mjs",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "next typegen && tsc --noEmit",
     "assets": "node scripts/prepare-assets.mjs",
     "screenshots": "node scripts/capture-screenshots.mjs",
     "qa": "node scripts/qa.mjs"
